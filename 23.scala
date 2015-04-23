@@ -10,13 +10,34 @@ def abundantNumbers(min: Int, max: Int): Seq[Int] = {
   (min to max).filter{ i: Int => divisors(i).sum > i }
 }
 
+def isSumOfAbundantNums(i: Int): Boolean = {
+  var aNums = abundantNumbers(1, i)
+  var pairs = aNums.combinations(2) ++ aNums.zip(aNums).map{ z: (Int, Int) => Vector(z._1, z._2) }
+  pairs.foreach { pair => 
+    if(pair.sum == i) { return true }
+  }
+  return false
+}
+
+def anySum(i: Int, aNums: Seq[Int]): Boolean = {
+  aNums.foreach { a1 =>
+    aNums.foreach { a2 =>
+      if(a1 + a2 == i) { return true }
+    }
+  }
+  false
+}
 
 def noAbundantSum(max: Int): Seq[Int] = {
-  (1 to max).filter { i =>
-    var aNums = abundantNumbers(1, i)
-    var abundantPairs = aNums.combinations(2) ++ aNums.zip(aNums).map{ z: (Int, Int) => Vector(z._1, z._2) }
-    abundantPairs.forall( pair => pair.sum != i )
-  }
+  var noSum: List[Int] = List()
+  var aNums = abundantNumbers(1, max)
+  var pairs = aNums.combinations(2).toList ++ aNums.map{ n: Int => List(n, n) }
+  println(pairs)
+  var sums = pairs.map(_.sum).distinct
+  println(s"sums: $sums")
+  var nums = (1 to max).toList
+  println(s"nums: $nums")
+  nums.diff(sums)
 }
 
 println(noAbundantSum(25))
