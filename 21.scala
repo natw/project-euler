@@ -12,18 +12,10 @@ def d(n: Int): Int = { divisors(n).sum }
 def areAmicable(i: Int, j: Int): Boolean = { d(i) == j && d(j) == i }
 
 def amicableNumbers(limit: Int): Seq[Int] = {
-  var nums: Array[Int] = Array()
-  for( i <- 1 to limit ) {
-    for( j <- i+1 to limit ) {
-      if( !nums.contains(j) ) {
-        if( areAmicable(i, j) ) {
-          nums = nums :+ i
-          nums = nums :+ j
-        }
-      }
-    }
+  def _am(start: Int) = {
+    (start+1 to limit).filter(areAmicable(_, start)).flatMap(List(start, _))
   }
-  return nums
+  return (1 to limit).flatMap(_am _)
 }
 
 println(divisors(220))
@@ -31,6 +23,8 @@ println(d(220))
 println(divisors(284))
 println(d(284))
 println(areAmicable(220, 284))
+
+println(amicableNumbers(500))
 
 var amNums: Seq[Int] = amicableNumbers(10000)
 println(amNums.sum)
